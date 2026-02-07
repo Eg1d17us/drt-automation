@@ -1,0 +1,79 @@
+[tool.robocop]
+include = [
+    "./tests",
+    "./resources/pages/functions.resource"
+]
+
+[tool.robocop.lint]
+ignore = [
+    "VAR04",
+    "VAR05",
+    "VAR06",
+    "missing-doc*",
+]
+reports = [
+    "timestamp",
+    "rules_by_id"
+]
+configure = [
+    "too-long-test-case.max_len=50",
+    "too-many-calls-in-test-case.max_calls=30",
+    "too-many-calls-in-keyword.max_calls=50",
+    "too-many-arguments.max_args=15",
+    "arguments-per-line.max_args=8",
+    "too-long-keyword.max_len=100",
+    "file-too-long.max_lines=1000"
+]
+
+[tool.robocop.format]
+diff = true
+overwrite = true
+space_count = 2
+
+select = [
+    "AddMissingEnd",
+    "AlignKeywordsSection",
+    "AlignSettingsSection",
+    "AlignTestCasesSection",
+    "DiscardEmptySections",
+    "MergeAndOrderSections",
+    "NormalizeAssignments",
+    "NormalizeComments",
+    "NormalizeNewLines",
+    "NormalizeSettingName",
+    "NormalizeSeparators",
+    "OrderSettings",
+    "OrderSettingsSection",
+    "OrderTags",
+    "RenameTestCases",
+    "RenameKeywords",
+    "ReplaceBreakContinue",
+    "ReplaceEmptyValues",
+    "ReplaceReturns",
+    "ReplaceRunKeywordIf",
+    "ReplaceWithVAR",
+    "SplitTooLongLine",
+]
+configure = [
+    "AlignKeywordsSection.alignment_type=fixed",
+    "AlignKeywordsSection.handle_too_long=compact_overflow",
+    "AlignKeywordsSection.widths=1",
+    "AlignKeywordsSection.align_comments=True",
+    "AlignSettingsSection.fixed_width=16",
+    "AlignTestCasesSection.alignment_type=fixed",
+    "AlignTestCasesSection.handle_too_long=compact_overflow",
+    "AlignTestCasesSection.widths=1",
+    "NormalizeAssignments.equal_sign_type=remove",
+    "NormalizeNewLines.section_lines=2",
+    "NormalizeNewLines.test_case_lines=1",
+    "NormalizeNewLines.keyword_lines=1",
+    "OrderSettingsSection.settings_order=suite_setup,suite_teardown,test_setup,test_teardown",
+    "OrderSettingsSection.imports_order=library,resource,variables",
+    "OrderSettingsSection.new_lines_between_groups=1",
+    "OrderTags.case_sensitive=True",
+    "RenameTestCases.capitalize_each_word=True",
+    "SplitTooLongLine.line_length=120",
+    "SplitTooLongLine.split_on_every_value=False",
+    "SplitTooLongLine.split_on_every_arg=False",
+    "SplitTooLongLine.split_on_every_setting_arg=False"
+]
