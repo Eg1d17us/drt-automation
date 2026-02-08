@@ -1,28 +1,37 @@
 *** Settings ***
+Library         Process
 Library         SeleniumLibrary
 Variables       ../../resources/locators/web_locators.py
 Variables       ../../env_variables.py
 
 
 *** Variables ***
-${PROFILE_DIR}  C:/Users/egylk/AppData/Local/Google/Chrome/User Data
+${PORT}  9266
+${PROFILE_DIR}  C:\\selenium\\ChromeProfile
+${CHROME_PATH}  C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe
 
 
 *** Keywords ***
-Login
-  [Arguments]  ${port}
-  ${options}  Evaluate  sys.modules['selenium.webdriver'].ChromeOptions()  sys, selenium.webdriver
-  Call Method  ${options}  add_experimental_option  debuggerAddress  localhost:${port}
-  Call Method  ${options}  add_argument  --disable-extensions
-  Call Method  ${options}  add_argument  --disable-web-security
-  Call Method  ${options}  add_argument  --disable-gpu
-  Call Method  ${options}  add_argument  --disable-dev-shm-usage
-  Call Method  ${options}  add_argument  --no-sandbox
-  Call Method  ${options}  add_argument  --window-size\=1920,1080
-  Call Method  ${options}  add_argument  --user-data-dir\=${PROFILE_DIR}
-  Create Webdriver  Chrome  options=${options}
+Connect To Local Browser
+  Start Chrome With Debug Port
+  ${chrome_options}  Evaluate  sys.modules['selenium.webdriver'].ChromeOptions()  sys, selenium.webdriver
+  Call Method  ${chrome_options}  add_experimental_option  debuggerAddress  localhost:${PORT}
+  Create Webdriver  Chrome  options=${chrome_options}
   Go To  ${URL}
-  Wait Until Element Is Visible  ${email_input}
+
+Start Chrome With Debug Port
+  Start Process
+  ...  ${CHROME_PATH}
+  ...  --remote-debugging-port\=${PORT}
+  ...  --user-data-dir\=${PROFILE_DIR}
+  ...  alias=chrome_debug
+  ...  shell=True
+
+Login And Go To All Parts Page
+  Wait Until Element Is Visible  ${email_input}  timeout=20
   Input Text  ${email_input}  ${USER_NAME}
   Input Text  ${password_input}  ${PASSWORD}
   Click Element  ${submit_btn}
+  Wait Until Element Is Visible  ${navigation_menu}
+  Go To  https://drtauto.rrr.lt/v2/parts/all?status=0&status=1&order=id%3Dasc&items_per_page=60
+  Wait Until Element Is Visible  ${part_id.format('0')}  timeout=15
