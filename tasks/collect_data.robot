@@ -1,27 +1,24 @@
 *** Settings ***
-Library         Collections
-Library         SeleniumLibrary
 Resource        ../resources/pages/functions.resource
-Variables       ../resources/locators/web_locators.py
-Variables       ../env_variables.py
 
 
 *** Variables ***
-@{LIST}  @{EMPTY}
+&{PART_DATA}  &{EMPTY}
 
 
 *** Tasks ***
 Get Data
-  Connect To Local Browser
+  Start Chrome With Port
+  Connect To Chrome On Port
+  Go To  ${URL}
   Login And Go To All Parts Page
-  FOR  ${line}  IN RANGE  60
-    Wait Until Element Is Visible  ${part_id.format('${line}')}  timeout=15
-    Scroll Element Into View  ${part_id.format('${line}')}
-    ${text}  Get Text  ${part_id.format('${line}')}
-    Log To Console  ${line}
-    Log To Console  ${text}
-    Append To List  ${LIST}  ${text}
-    Log To Console  ${LIST}
+  FOR  ${line_index}  IN RANGE  60
+    Wait Until Element Is Visible  ${part_id.format('${line_index}')}  timeout=15
+    Scroll Element Into View  ${part_id.format('${line_index}')}
+    ${id}  Get Text  ${part_id.format('${line_index}')}
+    ${name}  Get Text  ${part_name.format('${line_index}')}
+    ${first_code}  Get First Code  ${part_code.format('${line_index}')}
+    ${price}  Get Text  ${part_price.format('${line_index}')}
+    VAR  &{PART_DATA}  part_id=${id}  part_name=${name}  part_code=${first_code}  part_price=${price}
+    Log To Console  ${PART_DATA}
   END
-  ${len}  Evaluate  len(${LIST})
-  Log To Console  ${len}
