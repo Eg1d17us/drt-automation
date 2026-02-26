@@ -8,7 +8,7 @@ Resource        ../resources/pages/functions.resource
 
 
 *** Tasks ***
-Get Data
+Get DRT Auto Parts Data
   Start Chrome With Port
   Connect To Chrome On Port
   Go To  ${URL}
