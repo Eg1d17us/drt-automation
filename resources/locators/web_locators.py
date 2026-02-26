@@ -9,3 +9,6 @@ part_id = "//div[@role='row'][@row-id='{}']//div[@col-id='id']"
 part_name = "//div[@role='row'][@row-id='{}']//div[@col-id='name']"
 part_code = "//div[@role='row'][@row-id='{}']//div[@col-id='partCodes']"
 part_price = "//div[@role='row'][@row-id='{}']//div[@col-id='price']"
+
+# Misc
+last_page_btn = "//button[@title='Go to last page']"
