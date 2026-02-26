@@ -1,3 +1,4 @@
+rpaframework
 robotframework
 robotframework-seleniumlibrary
 robotframework-robocop
