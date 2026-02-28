@@ -5,19 +5,20 @@ Resource        ../resources/pages/functions.resource
 *** Variables ***
 @{PARTS_DATA}  @{EMPTY}
 @{SINGLE_PART_DATA}  @{EMPTY}
+${LINES_PER_PAGE}  100
 
 
 *** Tasks ***
-Get DRT Auto Parts Data
+Get DRT Car Parts Data
   Start Chrome With Port
   Connect To Chrome On Port
   Go To  ${URL}
-  Login And Go To All Parts Page
+  Login And Go To All Parts Page  ${LINES_PER_PAGE}  0
   ${number_of_pages}  Get The Number Of Pages
   FOR  ${page_number}  IN RANGE  ${number_of_pages}
-    Log To Console  ${\n}Page ${page_number} from ${number_of_pages} pages.
-    Go To Page Number  ${page_number}
-    FOR  ${line_index}  IN RANGE  60
+    Log To Console  ${\n}Started for page ${page_number} from ${number_of_pages} pages.
+    Go To Page Number  ${LINES_PER_PAGE}  ${page_number}
+    FOR  ${line_index}  IN RANGE  ${LINES_PER_PAGE}
       Wait Until Element Is Visible  ${part_id.format('${line_index}')}  timeout=15
       Scroll Element Into View  ${part_id.format('${line_index}')}
       ${id}  Get Text  ${part_id.format('${line_index}')}
@@ -28,4 +29,6 @@ Get DRT Auto Parts Data
       Append To List  ${PARTS_DATA}  ${SINGLE_PART_DATA}
     END
     Write Parts To Excel  ${PARTS_DATA}
+    Log To Console  Page ${page_number} data is written.
   END
+  Close Chrome

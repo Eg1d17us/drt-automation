@@ -12,7 +12,6 @@ Variables       ../../env_variables.py
 ${PORT}  9266
 ${PROFILE_DIR}  C:\\selenium\\ChromeProfile
 ${CHROME_PATH}  C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe
-${PAGE_WITH_PLACEHOLDER}  https://drtauto.rrr.lt/v2/parts/all?status=0&status=1&order=id%3Dasc&items_per_page=60&page={}
 ${WORKBOOK_PATH}  ./resources/data/parts_data_empty_file.xlsx
 ${WORKBOOK_OUTPUT_PATH}  ./output/xlsx_files/
 
@@ -26,18 +25,22 @@ Start Chrome With Port
   ...  alias=chrome_debug
   ...  shell=True
 
+Close Chrome
+  Run Process  taskkill  /F  /IM  chrome.exe
+
 Connect To Chrome On Port
   ${chrome_options}  Evaluate  sys.modules['selenium.webdriver'].ChromeOptions()  sys, selenium.webdriver
   Call Method  ${chrome_options}  add_experimental_option  debuggerAddress  localhost:${PORT}
   Create Webdriver  Chrome  options=${chrome_options}
 
 Login And Go To All Parts Page
+  [Arguments]  ${lines_per_page_to_show}  ${page_number}
   Wait Until Element Is Visible  ${email_input}  timeout=30
   Input Text  ${email_input}  ${USER_NAME}
   Input Text  ${password_input}  ${PASSWORD}
   Click Element  ${submit_btn}
   Wait Until Element Is Visible  ${navigation_menu}
-  Go To Page Number  0
+  Go To Page Number  ${lines_per_page_to_show}  ${page_number}
 
 Get The First Part Code
   [Arguments]  ${part_code_cell_locator}
@@ -47,9 +50,10 @@ Get The First Part Code
   RETURN  ${first_code}
 
 Go To Page Number
-  [Arguments]  ${page_number}
-  Go To  ${PAGE_WITH_PLACEHOLDER.format('${page_number}')}
-  Wait Until Element Is Visible  ${part_id.format('0')}  timeout=30
+  [Arguments]  ${lines_per_page_to_show}  ${page_number}
+  Go To
+  ...  https://drtauto.rrr.lt/v2/parts/all?status=0&status=1&order=id%3Dasc&items_per_page=${lines_per_page_to_show}&page=${page_number}
+  Wait Until Element Is Visible  ${part_id.format('0')}  timeout=60
 
 Get The Number Of Pages
   Wait Until Element Is Visible  ${last_page_btn}  timeout=30
@@ -57,8 +61,8 @@ Get The Number Of Pages
   Sleep  1
   ${page_url}  Get Location
   ${number_of_pages}  Fetch From Right  ${page_url}  =
-  ${number_plus_one}  Evaluate  ${number_of_pages} + 1
-  RETURN  ${number_plus_one}
+  ${number_of_pages_plus_one}  Evaluate  ${number_of_pages} + 1
+  RETURN  ${number_of_pages_plus_one}
 
 Write Parts To Excel
   [Arguments]  ${parts_list}

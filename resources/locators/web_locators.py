@@ -1,6 +1,6 @@
 # Login locators
-email_input = "//input[@id='«r1»']"
-password_input = "//input[@id='«r2»']"
+email_input = "//input[@type='email']"
+password_input = "//input[@type='password']"
 submit_btn = "//button[@data-testid='login-submit-button']"
 navigation_menu = "//ul[@data-testid='navigation-menu-v2']"
 
